@@ -149,7 +149,8 @@ class AudioEnv(discrete.DiscreteEnv):
                         done = False
                         rew = 0
                         li.append((1.0, newstate, rew, done))
-        super(AudioEnv, self).__init__(nS, nA, P, isd)
+        #super(AudioEnv, self).__init__(nS, nA, P, isd)
+        discrete.DiscreteEnv.__init__(self, nS, nA, P, isd)
 
 
     def render(self, mode='human'):
