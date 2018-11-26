@@ -18,13 +18,13 @@ rList = []
 for i in range(num_episodes):
      #Reset environment and get first new observation
     s = env.reset()
-    #env.render()
+    env.render()
     rAll = 0
     d = False
     j = 0
     #The Q-Table learning algorithm
     while j < 99:
-        #env.render()
+        env.render()
         j+=1
         #Choose an action by greedily picking from Q table
         a = np.argmax(Q[s,:] + np.random.randn(1,env.action_space.n)*(1./(i+1)))
@@ -38,6 +38,6 @@ for i in range(num_episodes):
             break
     #jList.append(j)
     rList.append(rAll)
-print("Total number of Episodes:", num_episodes)
-print(rList)
-print ("Percent of succesful episodes: " + str(sum(rList)/num_episodes) + "%")
+percentage_of_successful_episodes=(sum(rList)/num_episodes)*100
+print("Reward List",rList)
+print ("Percent of succesful episodes: ",percentage_of_successful_episodes, "%")

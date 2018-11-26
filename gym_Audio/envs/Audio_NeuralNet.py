@@ -69,5 +69,6 @@ with tf.Session() as sess:
                 break
         jList.append(j)
         rList.append(rAll)
-print(rList)
+percentage_of_successful_episodes=(sum(rList)/num_episodes)*100
+print("Reward List",rList)
 print ("Percent of succesful episodes: " + str(sum(rList)/num_episodes) + "%")
