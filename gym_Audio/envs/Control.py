@@ -3,8 +3,6 @@ import aubio
 nrow=4
 ncol=4
 pitch={}
-state=[]
-pitch={}
 new_state=[]
 
 def Extract_Pitch(row, col):
