@@ -81,13 +81,13 @@ if __name__ == '__main__':
             if(down>=right):
                 current=down
                 #state.append(current)
-                state.append(current)
+                #state.append(current)
                 new_state.append(i*nrow+j)
                 break
             else:
                 current=right
                 new_state.append(i * nrow + j)
-                state.append(current)
+                #state.append(current)
     print(state)
     print(new_state)
 
