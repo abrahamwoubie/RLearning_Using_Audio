@@ -3,7 +3,6 @@ import aubio
 nrow=4
 ncol=4
 pitch={}
-s={}
 state=[]
 pitch={}
 new_state=[]
@@ -47,20 +46,12 @@ def find_row_col(row, col,action):
 
 
 if __name__ == '__main__':
-    # a = []
-    # dist={}
-    # for i in range(0,nrow):
-    #     for j in range(0,ncol):
-            #pitch[i,j] = i*4+j
 
     for i in range(0,nrow):
         for j in range(0,ncol):
             for action in range(0,4):
                 r,c=find_row_col(i, j,action)
                 pitch[i,j]=Extract_Pitch(i,j)
-                s[i,j]=i*nrow+j
-                #s[i,j]=i*nrow+j
-                #print('Row {} Column {} Action {} new_Row {} new_Column {}'.format(i,j,action,r,c))
 
     for i in range(0,nrow):
         for j in range(0,ncol):
@@ -80,19 +71,9 @@ if __name__ == '__main__':
 
             if(down>=right):
                 current=down
-                #state.append(current)
-                #state.append(current)
                 new_state.append(i*nrow+j)
                 break
             else:
                 current=right
                 new_state.append(i * nrow + j)
-                #state.append(current)
-    #print(state)
     print(new_state)
-
-
-    for i in range(0,nrow):
-        for j in range(0,ncol):
-            #print(sum(pitch[i,j]))
-            pass
