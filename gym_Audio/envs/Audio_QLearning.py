@@ -16,7 +16,6 @@ num_episodes = 2000
 
 rList = []
 for i in range(num_episodes):
-    print("Iteration Number",i)
     print("*******************************************************************")
      #Reset environment and get first new observation
     s = env.reset()
@@ -25,7 +24,7 @@ for i in range(num_episodes):
     d = False
     j = 0
     #The Q-Table learning algorithm
-    while j < 99:
+    while j < 100:
         env.render()
         j+=1
         #Choose an action by greedily picking from Q table
@@ -37,9 +36,11 @@ for i in range(num_episodes):
         rAll += r
         s = s1
         if d == True:
+            print("Iteration Number {} has finished with {} number of timestamps".format(i,j))
             break
     #jList.append(j)
     rList.append(rAll)
 percentage_of_successful_episodes=(sum(rList)/num_episodes)*100
 print("Reward List",rList)
 print ("Percent of succesful episodes: ",percentage_of_successful_episodes, "%")
+

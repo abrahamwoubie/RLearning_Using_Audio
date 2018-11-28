@@ -33,8 +33,9 @@ goal_col=0
 Features_of_Goal={}
 Features_of_Current_State={}
 
-experiment_sample=1
+experiment_sample=0
 experiment_pitch=0
+experiment_spectrogram=1
 
 MAPS = {
     "Grid": [
@@ -50,6 +51,17 @@ MAPS = {
         "PPPPPPPPPG"
     ],
 }
+
+
+'''MAPS = {
+    "Grid": [
+        "SPPP",
+        "PPPP",
+        "PPPP",
+        "PPGP"
+    ],
+}'''
+
 
 class AudioEnv(discrete.DiscreteEnv):
     metadata = {'render.modes': ['human', 'ansi']}
@@ -127,15 +139,39 @@ class AudioEnv(discrete.DiscreteEnv):
             return pitch_List
 
 
+        def Extract_Spectrogram(row,col):
+            from scipy import signal
+            import matplotlib.pyplot as plt
+            import numpy as np
+
+            fs = 10e3
+            N = 1e5
+            amp = 2 * np.sqrt(2)
+            noise_power = 0.01 * fs / 2
+            time = np.arange(N) / float(fs)
+            mod = 500 * np.cos(2 * np.pi * 0.25 * time)
+            carrier = amp * np.sin(2 * np.pi * 3e3 * time + mod)
+            noise = np.random.normal(scale=np.sqrt(noise_power), size=time.shape)
+            noise *= np.exp(-time / 5)
+            x = carrier + noise  # x is the sample
+
+            frequencies, times, spectrogram = signal.spectrogram(x, fs)
+            return spectrogram
+            # plt.pcolormesh(times, frequencies, spectrogram)
+            # plt.ylabel('Frequency [Hz]')
+            # plt.xlabel('Time [sec]')
+            # plt.show()
+
         for row in range(0, nrow):
             for col in range(0, ncol):
                 letter = desc[row, col]
                 if letter in b'G':
                     if(experiment_pitch==1):
                         goal_pitch_values = Extract_Pitch(row, col)
-                    else:
+                    elif(experiment_sample==1):
                         goal_sample_Values=Extract_Samples(row,col)
-
+                    else:
+                        goal_spectrogram_Values=Extract_Spectrogram(row,col)
 
         for row in range(nrow):
             for col in range(ncol):
@@ -143,9 +179,12 @@ class AudioEnv(discrete.DiscreteEnv):
                 if(experiment_pitch==1):
                     Current_Pitch_values = Extract_Pitch(row, col)
                     dist[row, col] = distance.euclidean(goal_pitch_values,Current_Pitch_values)
-                else:
+                elif(experiment_sample==1):
                     Current_Sample_values = Extract_Samples(row, col)
                     dist[row, col] = distance.euclidean(goal_sample_Values, Current_Sample_values)
+                else:
+                    Current_Spectrogram_values=Extract_Spectrogram(row,col)
+                    dist[row, col] = distance.euclidean(goal_spectrogram_Values,Current_Spectrogram_values)
                 for a in range(4):
                     li = P[s][a]
                     if dist[row, col]==0:

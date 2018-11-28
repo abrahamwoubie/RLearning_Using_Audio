@@ -16,9 +16,11 @@ rewardList=[]
 
 for i in range(0,number_of_episodes):
     state=env.reset()
+    env.render()
     iteration=0
     reward_per_episode=0
     while iteration<100:
+        env.render()
         action=np.argmax(Q_Table[state,:] + np.random.randn(1,env.action_space.n)*(1./(i+1)))
         new_state,reward,done,_=env.step(action)
         Q_Table[state,action]=Q_Table[state,action] + \
