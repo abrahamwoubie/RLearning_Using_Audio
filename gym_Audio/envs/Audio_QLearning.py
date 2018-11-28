@@ -16,6 +16,8 @@ num_episodes = 2000
 
 rList = []
 for i in range(num_episodes):
+    print("Iteration Number",i)
+    print("*******************************************************************")
      #Reset environment and get first new observation
     s = env.reset()
     env.render()

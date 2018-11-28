@@ -33,37 +33,24 @@ goal_col=0
 Features_of_Goal={}
 Features_of_Current_State={}
 
+experiment_sample=1
+experiment_pitch=0
+
 MAPS = {
     "Grid": [
-        "SCCCCCCCCC",
-        "CCCCCCCCCC",
-        "CCCCCCCCCC",
-        "CCCCCCCCCC",
-        "CCCCCCCCCC",
-        "CCCCCCCCCC",
-        "CCCCCCCCCC",
-        "CCCCCCCCCC",
-        "CCCCCCCCCC",
-        "CCCCCCCCCG"
+        "SPPPPPPPPP",
+        "PPPPPPPPPP",
+        "PPPPPPPPPP",
+        "PPPPPPPPPP",
+        "PPPPPPPPPP",
+        "PPPPPPPPPP",
+        "PPPPPPPPPP",
+        "PPPPPPPPPP",
+        "PPPPPPPPPP",
+        "PPPPPPPPPG"
     ],
 }
 
-'''
-MAPS = {
-    "10x10": [
-        "SCCCCCCCCC",
-        "CCCCCCCCCC",
-        "CCCCCCCCCC",
-        "CCCCCCCCCC",
-        "CCCCCCCCCC",
-        "CCCCCCCCCC",
-        "CCCCCCCCCC",
-        "CCCCCCCCCC",
-        "CCCCCCCCCC",
-        "CCCCCCCCCG"
-    ],
-}
-'''
 class AudioEnv(discrete.DiscreteEnv):
     metadata = {'render.modes': ['human', 'ansi']}
 
@@ -100,6 +87,18 @@ class AudioEnv(discrete.DiscreteEnv):
                 row = max(row - 1, 0)
             return (row, col)
 
+        def Extract_Samples(row,col):
+
+            fs = 100  # sample rate
+            f = 2  # the frequency of the signal
+
+            x = np.arange(fs)  # the points on the x axis for plotting
+
+            # compute the value (amplitude) of the sin wave at the for each sample
+            samples = [row+col+np.sin(2 * np.pi * f * (i / fs)) for i in x]
+
+            return samples
+
         def Extract_Pitch(row, col):
 
             pitch_List = []
@@ -132,13 +131,21 @@ class AudioEnv(discrete.DiscreteEnv):
             for col in range(0, ncol):
                 letter = desc[row, col]
                 if letter in b'G':
-                    goal_pitch_values = Extract_Pitch(row, col)
+                    if(experiment_pitch==1):
+                        goal_pitch_values = Extract_Pitch(row, col)
+                    else:
+                        goal_sample_Values=Extract_Samples(row,col)
+
 
         for row in range(nrow):
             for col in range(ncol):
                 s = to_s(row, col)
-                Current_Pitch_values = Extract_Pitch(row, col)
-                dist[row, col] = distance.euclidean(goal_pitch_values,Current_Pitch_values)
+                if(experiment_pitch==1):
+                    Current_Pitch_values = Extract_Pitch(row, col)
+                    dist[row, col] = distance.euclidean(goal_pitch_values,Current_Pitch_values)
+                else:
+                    Current_Sample_values = Extract_Samples(row, col)
+                    dist[row, col] = distance.euclidean(goal_sample_Values, Current_Sample_values)
                 for a in range(4):
                     li = P[s][a]
                     if dist[row, col]==0:
@@ -168,6 +175,3 @@ class AudioEnv(discrete.DiscreteEnv):
 
         if mode != 'human':
             return outfile
-
-
-
