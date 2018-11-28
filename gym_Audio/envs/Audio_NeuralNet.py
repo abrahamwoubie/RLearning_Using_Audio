@@ -4,9 +4,12 @@ import numpy as np
 import random
 import tensorflow as tf
 import matplotlib.pyplot as plt
+from Audio_env import experiment_sample
+
 
 env = gym.make('Audio-v0')
 tf.reset_default_graph()
+
 
 
 #Define the Placeholder for the Input Data and Variables for the Weights¶

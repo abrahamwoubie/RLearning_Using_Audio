@@ -24,7 +24,7 @@ for i in range(num_episodes):
     d = False
     j = 0
     #The Q-Table learning algorithm
-    while j < 100:
+    while j < 200:
         env.render()
         j+=1
         #Choose an action by greedily picking from Q table

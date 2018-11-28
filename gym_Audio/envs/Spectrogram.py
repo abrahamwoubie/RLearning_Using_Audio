@@ -29,6 +29,6 @@ def get_wav_info(wav_file):
 if __name__ == '__main__':
     wav_file = 'test.wav'
     xx=graph_spectrogram(wav_file)
-    print(xx)
+    print(len(xx))
     dist=distance.euclidean(xx,xx)
     print(dist)

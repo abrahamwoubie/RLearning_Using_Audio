@@ -33,32 +33,53 @@ goal_col=0
 Features_of_Goal={}
 Features_of_Current_State={}
 
-experiment_sample=0
+experiment_sample=1
 experiment_pitch=0
-experiment_spectrogram=1
+experiment_spectrogram=0
 
 MAPS = {
     "Grid": [
-        "SPPPPPPPPP",
-        "PPPPPPPPPP",
-        "PPPPPPPPPP",
-        "PPPPPPPPPP",
-        "PPPPPPPPPP",
-        "PPPPPPPPPP",
-        "PPPPPPPPPP",
-        "PPPPPPPPPP",
-        "PPPPPPPPPP",
-        "PPPPPPPPPG"
+        "PPPPPPPPPPPPPPPPPPPP",
+        "SPPPPPPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPPPPPPG"
     ],
 }
 
 
 '''MAPS = {
     "Grid": [
-        "SPPP",
-        "PPPP",
-        "PPPP",
-        "PPGP"
+        "SPPPPPPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPPPPPPG"
     ],
 }'''
 
