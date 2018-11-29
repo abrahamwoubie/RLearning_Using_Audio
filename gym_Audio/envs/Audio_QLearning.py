@@ -54,7 +54,7 @@ plt.ylabel("Number of Iterations")
 plt.plot([number_of_episodes],[number_of_iterations_per_episode],'ro')
 plt.axis([0, 2000, 0, 100])
 plt.grid(True)
-plt.savefig("test.png")
+#plt.savefig("test.png")
 plt.show()
 
 

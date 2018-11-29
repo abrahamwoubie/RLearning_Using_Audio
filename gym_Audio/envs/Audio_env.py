@@ -65,10 +65,26 @@ experiment_spectrogram=0
 
 MAPS = {
     "Grid": [
-        "PPPP",
-        "PPPP",
-        "SPGP",
-        "PPPP",
+        "PPPPPSPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPPPPPPP",
+        "PPPPPPGPPPPPPPPPPPPP"
     ],
 }
 
@@ -87,7 +103,6 @@ class AudioEnv(discrete.DiscreteEnv):
 
         nA = 4
         nS = nrow * ncol
-
 
         isd = np.array(desc == b'S').astype('float64').ravel()
         isd /= isd.sum()
