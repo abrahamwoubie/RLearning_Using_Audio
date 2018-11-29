@@ -1,6 +1,8 @@
 import gym
 import gym_Audio
 import numpy as np
+import matplotlib.pyplot as plt
+
 env = gym.make('Audio-v0')
 
 #Initialize table with all zeros
@@ -11,6 +13,9 @@ lr = .8
 y = .95
 num_episodes = 2000
 
+number_of_iterations_per_episode=[]
+number_of_episodes=[]
+
 #create lists to contain total rewards and steps per episode
 #jList = []
 
@@ -19,12 +24,14 @@ for i in range(num_episodes):
     print("*******************************************************************")
      #Reset environment and get first new observation
     s = env.reset()
-    env.render()
+    #env.render()
     rAll = 0
     d = False
     j = 0
+
+    number_of_episodes.append(i)
     #The Q-Table learning algorithm
-    while j < 200:
+    while j < 100:
         env.render()
         j+=1
         #Choose an action by greedily picking from Q table
@@ -36,10 +43,21 @@ for i in range(num_episodes):
         rAll += r
         s = s1
         if d == True:
-            print("Iteration Number {} has finished with {} number of timestamps".format(i,j))
+            number_of_iterations_per_episode.append(j-1)
+            print("Iteration Number {} has finished with {} number of timestamps".format(i,j-1))
             break
     #jList.append(j)
     rList.append(rAll)
+
+plt.xlabel("Episode")
+plt.ylabel("Number of Iterations")
+plt.plot([number_of_episodes],[number_of_iterations_per_episode],'ro')
+plt.axis([0, 2000, 0, 100])
+plt.grid(True)
+plt.savefig("test.png")
+plt.show()
+
+
 percentage_of_successful_episodes=(sum(rList)/num_episodes)*100
 print("Reward List",rList)
 print ("Percent of succesful episodes: ",percentage_of_successful_episodes, "%")

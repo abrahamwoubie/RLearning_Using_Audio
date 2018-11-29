@@ -37,7 +37,7 @@ experiment_sample=1
 experiment_pitch=0
 experiment_spectrogram=0
 
-MAPS = {
+'''MAPS = {
     "Grid": [
         "PPPPPPPPPPPPPPPPPPPP",
         "SPPPPPPPPPPPPPPPPPPP",
@@ -61,27 +61,16 @@ MAPS = {
         "PPPPPPPPPPPPPPPPPPPG"
     ],
 }
+'''
 
-
-'''MAPS = {
+MAPS = {
     "Grid": [
-        "SPPPPPPPPPPPPPPPPPPP",
-        "PPPPPPPPPPPPPPPPPPPP",
-        "PPPPPPPPPPPPPPPPPPPP",
-        "PPPPPPPPPPPPPPPPPPPP",
-        "PPPPPPPPPPPPPPPPPPPP",
-        "PPPPPPPPPPPPPPPPPPPP",
-        "PPPPPPPPPPPPPPPPPPPP",
-        "PPPPPPPPPPPPPPPPPPPP",
-        "PPPPPPPPPPPPPPPPPPPP",
-        "PPPPPPPPPPPPPPPPPPPP",
-        "PPPPPPPPPPPPPPPPPPPP",
-        "PPPPPPPPPPPPPPPPPPPP",
-        "PPPPPPPPPPPPPPPPPPPP",
-        "PPPPPPPPPPPPPPPPPPPP",
-        "PPPPPPPPPPPPPPPPPPPG"
+        "PPPP",
+        "PPPP",
+        "SPGP",
+        "PPPP",
     ],
-}'''
+}
 
 
 class AudioEnv(discrete.DiscreteEnv):
@@ -120,7 +109,7 @@ class AudioEnv(discrete.DiscreteEnv):
                 row = max(row - 1, 0)
             return (row, col)
 
-        def Extract_Samples(row,col):
+        def Extract_Samples(row,col,letter):
 
             fs = 100  # sample rate
             f = 2  # the frequency of the signal
@@ -128,7 +117,10 @@ class AudioEnv(discrete.DiscreteEnv):
             x = np.arange(fs)  # the points on the x axis for plotting
 
             # compute the value (amplitude) of the sin wave at the for each sample
-            samples = [row+col+np.sin(2 * np.pi * f * (i / fs)) for i in x]
+            if letter in b'G':
+                samples = [100+row+col+np.sin(2 * np.pi * f * (i / fs)) for i in x]
+            else:
+                samples = [row + col + np.sin(2 * np.pi * f * (i / fs)) for i in x]
 
             return samples
 
@@ -190,18 +182,19 @@ class AudioEnv(discrete.DiscreteEnv):
                     if(experiment_pitch==1):
                         goal_pitch_values = Extract_Pitch(row, col)
                     elif(experiment_sample==1):
-                        goal_sample_Values=Extract_Samples(row,col)
+                        goal_sample_Values=Extract_Samples(row,col,letter)
                     else:
                         goal_spectrogram_Values=Extract_Spectrogram(row,col)
 
         for row in range(nrow):
             for col in range(ncol):
                 s = to_s(row, col)
+                letter = desc[row, col]
                 if(experiment_pitch==1):
                     Current_Pitch_values = Extract_Pitch(row, col)
                     dist[row, col] = distance.euclidean(goal_pitch_values,Current_Pitch_values)
                 elif(experiment_sample==1):
-                    Current_Sample_values = Extract_Samples(row, col)
+                    Current_Sample_values = Extract_Samples(row, col,letter)
                     dist[row, col] = distance.euclidean(goal_sample_Values, Current_Sample_values)
                 else:
                     Current_Spectrogram_values=Extract_Spectrogram(row,col)
