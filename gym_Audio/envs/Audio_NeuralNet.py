@@ -42,6 +42,7 @@ with tf.Session() as sess:
     for i in range(num_episodes):
         #Reset environment and get first new observation
         s = env.reset()
+        env.render()
         number_of_episodes.append(i)
         rAll = 0
         d = False
@@ -49,6 +50,7 @@ with tf.Session() as sess:
         #The Q-Network
         while j < 100:
             j+=1
+            env.render()
             #Choose an action by greedily (with e chance of random action) from the Q-network
             #a,allQ = sess.run([predict,Qout],feed_dict={inputs1:np.identity(16)[s:s+1]})
             a, allQ = sess.run([predict, Qout], feed_dict={inputs1: np.identity(400)[s:s + 1]})

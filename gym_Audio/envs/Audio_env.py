@@ -74,20 +74,33 @@ MAPS = {
         "PPPPPPPPPPPPPPPPPPPP",
         "PPPPPPPPPPPPPPPPPPPP",
         "PPPPPPPPPPPPPPPPPPPP",
+        "PPPPPPGPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPPPPPGP",
         "PPPPPPPPPPPPPPPPPPPP",
         "PPPPPPPPPPPPPPPPPPPP",
         "PPPPPPPPPPPPPPPPPPPP",
         "PPPPPPPPPPPPPPPPPPPP",
         "PPPPPPPPPPPPPPPPPPPP",
-        "PPPPPPPPPPPPPPPPPPPP",
-        "PPPPPPPPPPPPPPPPPPPP",
-        "PPPPPPPPPPPPPPPPPPPP",
-        "PPPPPPPPPPPPPPPPPPPP",
-        "PPPPPPPPPPPPPPPPPPPP",
-        "PPPPPPGPPPPPPPPPPPPP"
+        "PPPPPPPPPPPPPPPPPPPP"
     ],
 }
-
+'''MAPS = {
+    "Grid": [
+        "PPPPSPPPPP",
+        "PPPPPPPPPP",
+        "PPPPPPPPPP",
+        "PPPPPPPPPP",
+        "PPPPPPPPPP",
+        "PPPPPPPPPP",
+        "PPPPPPPPPP",
+        "PPPPPPPPPP",
+        "PPPPPPPPPP",
+        "PPPPPPPPPG"
+    ]
+}'''
 
 class AudioEnv(discrete.DiscreteEnv):
     metadata = {'render.modes': ['human', 'ansi']}
