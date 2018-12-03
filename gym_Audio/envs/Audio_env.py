@@ -90,16 +90,11 @@ MAPS = {
 
 MAPS = {
     "Grid": [
-        "SPPPSPPPPP",
-        "PPPPPPPPPP",
-        "PPPPPPPPPP",
-        "PPPPPPPPPP",
-        "PPPPPPPPPP",
-        "PPPPPPPPPP",
-        "PPPPPPPPPP",
-        "PPPPPPPPPP",
-        "PPPGPPPPPP",
-        "PPPPPPPPPP"
+        "PPPP",
+        "PPPP",
+        "PPPP",
+        "PPPG",
+
     ]
 }
 
@@ -118,9 +113,10 @@ class AudioEnv(discrete.DiscreteEnv):
         nA = 4
         nS = nrow * ncol
 
-        isd = np.array(desc == b'S').astype('float64').ravel()
-        isd /= isd.sum()
-
+        #isd = np.array(desc == b'S').astype('float64').ravel()
+        #isd /= isd.sum()
+        isd=range(0,15)
+        G=range(0,15)
         PP={}
         P = {s: {a: [] for a in range(nA)} for s in range(nS)}
 

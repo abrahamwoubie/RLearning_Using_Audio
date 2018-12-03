@@ -69,22 +69,23 @@ with tf.Session() as sess:
             rAll += r
             s = s1
             if d == True:
-                number_of_iterations_per_episode.append(j-1)
-                print("Iteration Number {} has finished with {} number of timestamps".format(i, j - 1))
+                #print("Iteration Number {} has finished with {} number of timestamps".format(i, j - 1))
                 #Reduce chance of random action as we train the model.
                 e = 1./((i/50) + 10)
                 break
-        jList.append(j)
+        #jList.append(j)
+        number_of_iterations_per_episode.append(j - 1)
         rList.append(rAll)
+
+
+percentage_of_successful_episodes=(sum(rList)/num_episodes)*100
+print("Reward List",rList)
+print ("Percent of successful episodes: ",percentage_of_successful_episodes,"%")
 
 plt.xlabel("Episode")
 plt.ylabel("Number of Iterations")
-plt.plot([number_of_episodes],[number_of_iterations_per_episode],'ro')
-plt.axis([0, 2000, 0, 100])
+plt.plot(number_of_episodes, number_of_iterations_per_episode, 'ro')
 plt.grid(True)
 #plt.savefig("test.png")
 plt.show()
 
-percentage_of_successful_episodes=(sum(rList)/num_episodes)*100
-print("Reward List",rList)
-print ("Percent of succesful episodes: ",percentage_of_successful_episodes,"%")

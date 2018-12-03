@@ -1,4 +1,5 @@
 import numpy as np
+import random
 
 from gym import Env, spaces
 from gym.utils import seeding
@@ -27,10 +28,11 @@ class DiscreteEnv(Env):
 
         self.reset()
 
-
     def reset(self):
-        self.s=np.argmax(self.isd)
-        return self.s
+        #self.s=np.argmax(self.isd)
+        self.s=random.choice(self.isd)
+        self.g = random.choice(self.isd)
+        return self.s,self.g
 
     def step(self, a):
         transitions = self.P[self.s][a]

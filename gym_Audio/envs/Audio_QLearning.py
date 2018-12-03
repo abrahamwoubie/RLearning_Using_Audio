@@ -24,8 +24,10 @@ rList = []
 for i in range(num_episodes):
     #print("*******************************************************************")
      #Reset environment and get first new observation
-    s = env.reset()
-    #env.render()
+    s,g = env.reset()
+    print("Start state at Iteration {} is {}".format(i,s))
+    print("Goal state at Iteration {} is {}".format(i, g))
+    env.render()
     rAll = 0
     d = False
     j = 0
@@ -33,7 +35,7 @@ for i in range(num_episodes):
     number_of_episodes.append(i)
     #The Q-Table learning algorithm
     while j < 100:
-        #env.render()
+        env.render()
         j+=1
         #Choose an action by greedily picking from Q table
         a = np.argmax(Q[s,:] + np.random.randn(1,env.action_space.n)*(1./(i+1)))
@@ -51,7 +53,7 @@ for i in range(num_episodes):
     rList.append(rAll)
 percentage_of_successful_episodes=(sum(rList)/num_episodes)*100
 print("Reward List",rList)
-print ("Percent of succesful episodes: ",percentage_of_successful_episodes, "%")
+print ("Percent of successful episodes: ",percentage_of_successful_episodes, "%")
 plt.xlabel("Episode")
 plt.ylabel("Number of Iterations")
 plt.plot(number_of_episodes, number_of_iterations_per_episode, 'ro')
