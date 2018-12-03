@@ -61,7 +61,7 @@ experiment_spectrogram=0
         "PPPPPPPPPPPPPPPPPPPG"
     ],
 }
-'''
+
 
 MAPS = {
     "Grid": [
@@ -86,21 +86,22 @@ MAPS = {
         "PPPPPPPPPPPPPPPPPPPP",
         "PPPPPPPPPPPPPPPPPPPP"
     ],
-}
-'''MAPS = {
-    "Grid": [
-        "PPPPSPPPPP",
-        "PPPPPPPPPP",
-        "PPPPPPPPPP",
-        "PPPPPPPPPP",
-        "PPPPPPPPPP",
-        "PPPPPPPPPP",
-        "PPPPPPPPPP",
-        "PPPPPPPPPP",
-        "PPPPPPPPPP",
-        "PPPPPPPPPG"
-    ]
 }'''
+
+MAPS = {
+    "Grid": [
+        "SPPPSPPPPP",
+        "PPPPPPPPPP",
+        "PPPPPPPPPP",
+        "PPPPPPPPPP",
+        "PPPPPPPPPP",
+        "PPPPPPPPPP",
+        "PPPPPPPPPP",
+        "PPPPPPPPPP",
+        "PPPGPPPPPP",
+        "PPPPPPPPPP"
+    ]
+}
 
 class AudioEnv(discrete.DiscreteEnv):
     metadata = {'render.modes': ['human', 'ansi']}
@@ -152,7 +153,7 @@ class AudioEnv(discrete.DiscreteEnv):
 
             return samples
 
-        def Extract_Pitch(row, col):
+        def Extract_Pitch(row, col,letter):
 
             pitch_List = []
             sample_rate = 44100
@@ -172,19 +173,25 @@ class AudioEnv(discrete.DiscreteEnv):
             # input array should be of type aubio.float_type (defaults to float32)
             x_padded = x_padded.astype(aubio.float_type)
 
-            for frame, i in zip(x_padded, range(len(x_padded))):
-                time_str = "%.2f" % (i * p.hop_size / float(sample_rate))
-                pitch_candidate = p(frame)[0] + row + col
-                # print(pitch_candidate)
-                pitch_List.append(pitch_candidate)
+            if letter in b'G':
+
+                for frame, i in zip(x_padded, range(len(x_padded))):
+                    time_str = "%.2f" % (i * p.hop_size / float(sample_rate))
+                    pitch_candidate = p(frame)[0] + row + col + 100
+                    # print(pitch_candidate)
+                    pitch_List.append(pitch_candidate)
+            else:
+
+                for frame, i in zip(x_padded, range(len(x_padded))):
+                    time_str = "%.2f" % (i * p.hop_size / float(sample_rate))
+                    pitch_candidate = p(frame)[0] + row + col
+                    # print(pitch_candidate)
+                    pitch_List.append(pitch_candidate)
+
             return pitch_List
 
 
-        def Extract_Spectrogram(row,col):
-            from scipy import signal
-            import matplotlib.pyplot as plt
-            import numpy as np
-
+        def Extract_Spectrogram(row,col,letter):
             fs = 10e3
             N = 1e5
             amp = 2 * np.sqrt(2)
@@ -192,41 +199,42 @@ class AudioEnv(discrete.DiscreteEnv):
             time = np.arange(N) / float(fs)
             mod = 500 * np.cos(2 * np.pi * 0.25 * time)
             carrier = amp * np.sin(2 * np.pi * 3e3 * time + mod)
-            noise = np.random.normal(scale=np.sqrt(noise_power), size=time.shape)
-            noise *= np.exp(-time / 5)
-            x = carrier + noise  # x is the sample
-
+            #noise = np.random.normal(scale=np.sqrt(noise_power), size=time.shape)
+            #noise *= np.exp(-time / 5)
+            #x = carrier + noise  # x is the sample
+            x=carrier
             frequencies, times, spectrogram = signal.spectrogram(x, fs)
+            if letter in b'G':
+                spectrogram=spectrogram*100
             return spectrogram
-            # plt.pcolormesh(times, frequencies, spectrogram)
-            # plt.ylabel('Frequency [Hz]')
-            # plt.xlabel('Time [sec]')
-            # plt.show()
+
 
         for row in range(0, nrow):
             for col in range(0, ncol):
                 letter = desc[row, col]
                 if letter in b'G':
                     if(experiment_pitch==1):
-                        goal_pitch_values = Extract_Pitch(row, col)
+                        goal_pitch_values = Extract_Pitch(row, col,letter)
                     elif(experiment_sample==1):
                         goal_sample_Values=Extract_Samples(row,col,letter)
                     else:
-                        goal_spectrogram_Values=Extract_Spectrogram(row,col)
+                        goal_spectrogram_Values=Extract_Spectrogram(row,col,letter)
 
+                        print("Mean of Goal {} {} {}".format(row,col,np.mean(goal_spectrogram_Values)))
         for row in range(nrow):
             for col in range(ncol):
                 s = to_s(row, col)
                 letter = desc[row, col]
                 if(experiment_pitch==1):
-                    Current_Pitch_values = Extract_Pitch(row, col)
+                    Current_Pitch_values = Extract_Pitch(row, col,letter)
                     dist[row, col] = distance.euclidean(goal_pitch_values,Current_Pitch_values)
                 elif(experiment_sample==1):
                     Current_Sample_values = Extract_Samples(row, col,letter)
                     dist[row, col] = distance.euclidean(goal_sample_Values, Current_Sample_values)
                 else:
-                    Current_Spectrogram_values=Extract_Spectrogram(row,col)
-                    dist[row, col] = distance.euclidean(goal_spectrogram_Values,Current_Spectrogram_values)
+                    Current_Spectrogram_values=Extract_Spectrogram(row,col,letter)
+                    dist[row, col] = np.mean(goal_spectrogram_Values)-np.mean(Current_Spectrogram_values)
+                    print("Mean of current {} {} {}".format(row,col,np.mean(Current_Spectrogram_values)))
                 for a in range(4):
                     li = P[s][a]
                     if dist[row, col]==0:
