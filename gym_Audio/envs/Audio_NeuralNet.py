@@ -42,15 +42,17 @@ with tf.Session() as sess:
     for i in range(num_episodes):
         #Reset environment and get first new observation
         s = env.reset()
-        env.render()
+        #env.render()
         number_of_episodes.append(i)
         rAll = 0
         d = False
         j = 0
         #The Q-Network
-        while j < 100:
+        done=False
+        while not done:
+        #while j < 100:
             j+=1
-            env.render()
+            #env.render()
             #Choose an action by greedily (with e chance of random action) from the Q-network
             #a,allQ = sess.run([predict,Qout],feed_dict={inputs1:np.identity(16)[s:s+1]})
             a, allQ = sess.run([predict, Qout], feed_dict={inputs1: np.identity(400)[s:s + 1]})
@@ -82,10 +84,10 @@ percentage_of_successful_episodes=(sum(rList)/num_episodes)*100
 print("Reward List",rList)
 print ("Percent of successful episodes: ",percentage_of_successful_episodes,"%")
 
-plt.xlabel("Episode")
-plt.ylabel("Number of Iterations")
-plt.plot(number_of_episodes, number_of_iterations_per_episode, 'ro')
-plt.grid(True)
+plt.plot(np.arange(len(number_of_episodes)), number_of_iterations_per_episode)
+plt.ylabel('Number of Iterations')
+plt.xlabel('Episode #')
+#plt.grid(True)
 #plt.savefig("test.png")
 plt.show()
 

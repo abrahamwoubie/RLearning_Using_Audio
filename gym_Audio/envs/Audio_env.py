@@ -6,6 +6,7 @@ import aubio
 from gym_Audio.envs import discrete
 import numpy as np
 from scipy.spatial import distance
+import random
 
 import pandas as pd # data frame
 from scipy.io import wavfile # reading the wavfile
@@ -40,7 +41,6 @@ experiment_spectrogram=0
 '''MAPS = {
     "Grid": [
         "PPPPPPPPPPPPPPPPPPPP",
-        "SPPPPPPPPPPPPPPPPPPP",
         "PPPPPPPPPPPPPPPPPPPP",
         "PPPPPPPPPPPPPPPPPPPP",
         "PPPPPPPPPPPPPPPPPPPP",
@@ -54,31 +54,6 @@ experiment_spectrogram=0
         "PPPPPPPPPPPPPPPPPPPP",
         "PPPPPPPPPPPPPPPPPPPP",
         "PPPPPPPPPPPPPPPPPPPP",
-        "PPPPPPPPPPPPPPPPPPPP",
-        "PPPPPPPPPPPPPPPPPPPP",
-        "PPPPPPPPPPPPPPPPPPPP",
-        "PPPPPPPPPPPPPPPPPPPP",
-        "PPPPPPPPPPPPPPPPPPPG"
-    ],
-}
-
-
-MAPS = {
-    "Grid": [
-        "PPPPPSPPPPPPPPPPPPPP",
-        "PPPPPPPPPPPPPPPPPPPP",
-        "PPPPPPPPPPPPPPPPPPPP",
-        "PPPPPPPPPPPPPPPPPPPP",
-        "PPPPPPPPPPPPPPPPPPPP",
-        "PPPPPPPPPPPPPPPPPPPP",
-        "PPPPPPPPPPPPPPPPPPPP",
-        "PPPPPPPPPPPPPPPPPPPP",
-        "PPPPPPPPPPPPPPPPPPPP",
-        "PPPPPPGPPPPPPPPPPPPP",
-        "PPPPPPPPPPPPPPPPPPPP",
-        "PPPPPPPPPPPPPPPPPPPP",
-        "PPPPPPPPPPPPPPPPPPPP",
-        "PPPPPPPPPPPPPPPPPPGP",
         "PPPPPPPPPPPPPPPPPPPP",
         "PPPPPPPPPPPPPPPPPPPP",
         "PPPPPPPPPPPPPPPPPPPP",
@@ -90,13 +65,24 @@ MAPS = {
 
 MAPS = {
     "Grid": [
-        "PPPP",
-        "PPPP",
-        "PPPP",
-        "PPPG",
-
-    ]
+        "PPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPP",
+        "PPPPPPPPPPPPPPP"
+    ],
 }
+
 
 class AudioEnv(discrete.DiscreteEnv):
     metadata = {'render.modes': ['human', 'ansi']}
@@ -115,9 +101,11 @@ class AudioEnv(discrete.DiscreteEnv):
 
         #isd = np.array(desc == b'S').astype('float64').ravel()
         #isd /= isd.sum()
-        isd=range(0,15)
-        G=range(0,15)
-        PP={}
+
+        isd=range(0,nS)
+        goal_state=random.choice(isd)
+        #print("Goal state is ",goal_state)
+
         P = {s: {a: [] for a in range(nA)} for s in range(nS)}
 
         def to_s(row, col):
@@ -134,7 +122,7 @@ class AudioEnv(discrete.DiscreteEnv):
                 row = max(row - 1, 0)
             return (row, col)
 
-        def Extract_Samples(row,col,letter):
+        def Extract_Samples(row,col,s):
 
             fs = 100  # sample rate
             f = 2  # the frequency of the signal
@@ -142,14 +130,15 @@ class AudioEnv(discrete.DiscreteEnv):
             x = np.arange(fs)  # the points on the x axis for plotting
 
             # compute the value (amplitude) of the sin wave at the for each sample
-            if letter in b'G':
+            #if letter in b'G':
+            if(s== goal_state):
                 samples = [100+row+col+np.sin(2 * np.pi * f * (i / fs)) for i in x]
             else:
                 samples = [row + col + np.sin(2 * np.pi * f * (i / fs)) for i in x]
 
             return samples
 
-        def Extract_Pitch(row, col,letter):
+        def Extract_Pitch(row, col,s):
 
             pitch_List = []
             sample_rate = 44100
@@ -169,7 +158,8 @@ class AudioEnv(discrete.DiscreteEnv):
             # input array should be of type aubio.float_type (defaults to float32)
             x_padded = x_padded.astype(aubio.float_type)
 
-            if letter in b'G':
+            #if letter in b'G':
+            if (s == goal_state):
 
                 for frame, i in zip(x_padded, range(len(x_padded))):
                     time_str = "%.2f" % (i * p.hop_size / float(sample_rate))
@@ -187,7 +177,7 @@ class AudioEnv(discrete.DiscreteEnv):
             return pitch_List
 
 
-        def Extract_Spectrogram(row,col,letter):
+        def Extract_Spectrogram(row,col,s):
             fs = 10e3
             N = 1e5
             amp = 2 * np.sqrt(2)
@@ -200,37 +190,38 @@ class AudioEnv(discrete.DiscreteEnv):
             #x = carrier + noise  # x is the sample
             x=carrier
             frequencies, times, spectrogram = signal.spectrogram(x, fs)
-            if letter in b'G':
+            #if letter in b'G':
+            if (s == goal_state):
                 spectrogram=spectrogram*100
             return spectrogram
 
 
         for row in range(0, nrow):
             for col in range(0, ncol):
-                letter = desc[row, col]
-                if letter in b'G':
+                s=to_s(row,col)
+                if(s==goal_state):
+                #letter = desc[row, col]
+                #if letter in b'G':
                     if(experiment_pitch==1):
-                        goal_pitch_values = Extract_Pitch(row, col,letter)
+                        goal_pitch_values = Extract_Pitch(row, col,s)
                     elif(experiment_sample==1):
-                        goal_sample_Values=Extract_Samples(row,col,letter)
+                        goal_sample_Values=Extract_Samples(row,col,s)
                     else:
-                        goal_spectrogram_Values=Extract_Spectrogram(row,col,letter)
+                        goal_spectrogram_Values=Extract_Spectrogram(row,col,s)
 
-                        print("Mean of Goal {} {} {}".format(row,col,np.mean(goal_spectrogram_Values)))
         for row in range(nrow):
             for col in range(ncol):
                 s = to_s(row, col)
                 letter = desc[row, col]
                 if(experiment_pitch==1):
-                    Current_Pitch_values = Extract_Pitch(row, col,letter)
+                    Current_Pitch_values = Extract_Pitch(row, col,s)
                     dist[row, col] = distance.euclidean(goal_pitch_values,Current_Pitch_values)
                 elif(experiment_sample==1):
-                    Current_Sample_values = Extract_Samples(row, col,letter)
+                    Current_Sample_values = Extract_Samples(row, col,s)
                     dist[row, col] = distance.euclidean(goal_sample_Values, Current_Sample_values)
                 else:
-                    Current_Spectrogram_values=Extract_Spectrogram(row,col,letter)
+                    Current_Spectrogram_values=Extract_Spectrogram(row,col,s)
                     dist[row, col] = np.mean(goal_spectrogram_Values)-np.mean(Current_Spectrogram_values)
-                    print("Mean of current {} {} {}".format(row,col,np.mean(Current_Spectrogram_values)))
                 for a in range(4):
                     li = P[s][a]
                     if dist[row, col]==0:
